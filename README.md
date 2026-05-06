@@ -1,8 +1,8 @@
-# CricPredAI V3.0
+# IPL Score Predictor
 
-A ball-by-ball IPL decision-support simulator.
+A ball-by-ball IPL decision-support simulator. Please try to launch the app through Streamlit Deployment.
 
-## What changed in V3.0
+## Thing added/improved from previous versions:
 
 - Removed the unreliable preset team-pool dependency from the main workflow.
 - User types team names manually.
