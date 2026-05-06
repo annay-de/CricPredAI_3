@@ -2,7 +2,7 @@
 
 ## Project title
 
-CricPredAI: A probabilistic ball-by-ball IPL match simulator and decision-support system
+CricPredAI: A probabilistic ball-by-ball IPL match simulator and decision-support system by: **ANNAY DE, TANMAY SINGH, SIDDHANT MUKHERJEE**
 
 ## Project summary
 
