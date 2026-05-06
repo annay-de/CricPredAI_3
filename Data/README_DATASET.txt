@@ -1,6 +1,7 @@
 # Dataset Snapshot
 
-This repository only contains a lightweight snapshot of the original IPL ball-by-ball dataset.
+This repository only contains a lightweight snapshot of the original IPL ball-by-ball dataset. 
+PLEASE FIND THE FULL DATASET HERE: https://drive.google.com/drive/folders/1G06ILrvEOes6zN0_nbIXkAhCtsMM9kP9?usp=sharing
 
 Reason:
 The complete dataset used for model training is larger than 100 MB and therefore exceeds normal GitHub upload limits.
