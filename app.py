@@ -125,3 +125,4 @@ if run:
         st.plotly_chart(f, use_container_width=True)
 else:
     st.info("Select two playing XIs and click Simulate match.")
+
