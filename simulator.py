@@ -287,3 +287,4 @@ def simulate_distribution(n, *args, **kwargs):
         res = simulate_match(*args, seed=None if base_seed is None else base_seed+i, commentary=False, **kwargs)
         rows.append({"sim":i+1,"winner":res["winner"],"first_runs":res["first"]["runs"],"second_runs":res["second"]["runs"],"first_wickets":res["first"]["wickets"],"second_wickets":res["second"]["wickets"]})
     return pd.DataFrame(rows)
+    
