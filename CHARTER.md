@@ -8,7 +8,7 @@
 |---|---|
 | Team members | Annay De, Tanmay Singh, Siddhant Mukherjee |
 | Project type | Predictive |
-| Estimated hours per person | 50 |
+| Estimated hours per person | 10-12 |
 | Charter version | v2 |
 | Date | 2026-05-07 |
 
