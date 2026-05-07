@@ -1,223 +1,126 @@
-# CricPredAI Charter
+# Project Charter — ECO 6810 Final Project
 
-## Project title
+---
 
-CricPredAI: A probabilistic ball-by-ball IPL match simulator and decision-support system by: **ANNAY DE, TANMAY SINGH, SIDDHANT MUKHERJEE**
+## Header
 
-## Project summary
+| Field | Value |
+|---|---|
+| Team members | Annay De, Tanmay Singh, Siddhant Mukherjee |
+| Project type | Predictive |
+| Estimated hours per person | 50 |
+| Charter version | v2 |
+| Date | 2026-05-07 |
 
-CricPredAI is a cricket analytics project that uses historical IPL ball-by-ball data to simulate T20 matches at the delivery level. The system estimates probabilities for ball outcomes such as dots, singles, boundaries, wickets, wides, no-balls, byes and leg-byes, and then uses these probabilities to generate full innings and match simulations.
+---
 
-The project is designed as a decision-support and experimentation tool rather than a simple final-score predictor. Users can define two teams, select playing XIs from dataset-derived player lists, choose match conditions, select a model, and then simulate a match with detailed scorecards, ball-by-ball verification, progression graphs, and simulation distributions.
+## 1. Problem and Stakeholder
 
-## Research and product question
+The stakeholder is an **IPL franchise strategy and analytics unit** — specifically, the team analyst responsible for playing-XI selection before each match. This is an economics-of-decision problem: the analyst must allocate a fixed squad budget (11 slots) across batters, bowlers, and all-rounders under uncertainty about how individual players will perform against a specific opponent at a specific venue. The decision moment is **team selection, approximately 24 hours before the match**, when the venue, pitch report, weather forecast, and opposing squad are known.
 
-Can historical IPL ball-by-ball data be used to build a calibrated probabilistic simulator that produces realistic T20 match outcomes and supports tactical experimentation over team composition, batting order, bowling choices, venue conditions and match state?
+The tool this project builds allows the analyst to simulate ball-by-ball match outcomes under different XI configurations and match conditions. This directly informs the resource-allocation decision: which combination of players maximises the franchise's expected score or win probability given the context? The framing is identical in structure to the economic decision problems this course addresses — constrained optimisation under uncertainty, with a probabilistic model replacing the analyst's intuition.
 
-## Main data source
+---
 
-The main data source is an IPL ball-by-ball dataset stored locally as `IPL.csv`.
+## 2. Main Outcome Variable
 
-The dataset is used for:
-- delivery-level match outcomes,
-- batter and bowler identities,
-- batting and bowling teams,
-- innings state,
-- venue information,
-- wickets,
-- extras,
-- toss information,
-- and match progression.
+- **Name:** Multiclass log-loss on ball-outcome prediction
+- **Unit:** Nats (log-loss, lower is better)
+- **Source table / column:** IPL ball-by-ball dataset (`chaitu20/ipl-dataset2008-2025` on Kaggle); the target column is the delivery outcome class (dot, 1, 2, 3, 4, 6, W, WD, NB, LB, B)
+- **Population / panel:** All legal and extra deliveries across IPL seasons 2008–2025, split into training rows and a held-out test slice (final 15% of matches by date)
 
-The deployed Streamlit app does not require the raw `IPL.csv` file at runtime. Instead, the training pipeline generates saved artefacts under `artifacts/`, which are then loaded by the app.
+Log-loss is the primary metric because this is a probabilistic simulation project. A model that produces better-calibrated probability distributions over ball outcomes generates more realistic simulations and is therefore more useful to the franchise analyst than one that only maximises hard-classification accuracy.
 
-## Current repository structure
+---
 
-The current V3 repository contains the following main components:
+## 3. Main Quantitative Success Threshold
 
-- `app.py`: Streamlit frontend for the simulator
-- `simulator.py`: match simulation engine
-- `train_models.py`: training and artefact generation pipeline
-- `model_wrappers.py`: wrapper support for XGBoost model output
-- `requirements.txt`: Python dependencies
-- `artifacts/`: saved model artefacts, metadata and model reports
+**Predictive threshold:** Out-of-sample multiclass log-loss of the primary model on the held-out test split is strictly lower than the empirical baseline log-loss on the same split.
 
-The current frontend allows users to:
-- enter custom team names,
-- select playing XIs using dataset-derived player lists,
-- choose venue, pitch, weather, toss winner and toss decision,
-- select a model,
-- run match simulations,
-- inspect scorecards,
-- inspect ball-by-ball outputs,
-- view rule checks,
-- and compare simulated score distributions.
+In concrete form: `primary_log_loss < baseline_log_loss`, where both values are written to `outputs/primary_metric.json` and `outputs/baseline_metric.json` respectively by `uv run main.py`.
 
-## Baseline model
+The current run already satisfies this — the primary model beats the empirical baseline — and the threshold requires that this holds on the final submission run.
 
-The baseline model is an empirical prior model based on historical IPL delivery outcome frequencies. It estimates the probability of each ball outcome directly from the training data.
+---
 
-This is used as a benchmark and also as a stabilising reference distribution for simulation. It is especially useful because historical outcome frequencies are naturally calibrated to real IPL scoring patterns.
+## 4. Baseline to Beat
 
-## Primary modelling approach
+The baseline is an **empirical prior model**: for each possible ball outcome, it estimates the probability directly from the marginal frequency of that outcome in the training data, ignoring all match-state features. This is equivalent to a naive "historical average" forecast.
 
-The primary modelling approach is multiclass delivery-level outcome prediction. Each ball is treated as an observation, and the model predicts the probability distribution across possible outcomes.
+This baseline is computed before any ML model is trained, using only the training split. Its log-loss is recorded in `outputs/baseline_metric.json`. Any model that uses match-state features (over, wickets, batter, bowler, venue, etc.) should in principle beat this baseline, and the project's success threshold requires that it does.
 
-Current models include:
-- empirical baseline prior,
-- Random Forest,
-- XGBoost support,
-- and calibrated/blended simulation logic.
+---
 
-The simulator uses model-predicted probabilities along with empirical calibration/blending so that raw machine learning probabilities do not produce unrealistic match paths such as excessive collapses or implausible scoring patterns.
+## 5. Falsifiable Hypothesis
 
-## Outcome classes
+A Random Forest model trained on delivery-level match-state features (over, wickets fallen, batter identity, bowler identity, venue, innings phase) will achieve strictly lower multiclass log-loss than the empirical marginal-frequency baseline on held-out IPL deliveries from seasons not seen during training.
 
-The current outcome classes include:
+---
 
-- `0`: dot ball
-- `1`: one run
-- `2`: two runs
-- `3`: three runs
-- `4`: four runs
-- `6`: six runs
-- `W`: wicket
-- `WD`: wide
-- `NB`: no-ball
-- `LB`: leg-bye
-- `B`: bye
+## 6. Data Sources and Access Plan
 
-## Features currently used
+**Source:** IPL ball-by-ball dataset, 2008–2025  
+**Provider:** Kaggle — dataset identifier `chaitu20/ipl-dataset2008-2025`  
+**URL:** https://www.kaggle.com/datasets/chaitu20/ipl-dataset2008-2025  
+**Licence:** Public community dataset on Kaggle (free to use for educational and research purposes)  
+**Access method:** Programmatic download via `kagglehub` Python library
 
-The current training pipeline uses a mixture of numerical and categorical match-state features.
+**10-line data probe** (also saved as `Data/data_probe.py`):
 
-Numerical features include:
-- innings,
-- over,
-- legal ball number,
-- team runs,
-- team wickets,
-- batter runs,
-- batter balls.
+```python
+import kagglehub
+from kagglehub import KaggleDatasetAdapter
 
-Categorical features include:
-- phase of innings,
-- batting team,
-- bowling team,
-- batter,
-- bowler,
-- venue,
-- toss decision.
-
-## Evaluation metrics
-
-The primary metric is:
-
-- multiclass log loss.
-
-Additional model diagnostics include:
-- accuracy,
-- balanced accuracy,
-- macro-F1 score,
-- model comparison table.
-
-Log loss is the main metric because this is a probabilistic simulation project. A model that produces better calibrated probability distributions is more useful than a model that only maximises hard classification accuracy.
-
-## Current milestone outputs
-
-For the milestone, the repository should include or generate:
-
-- `outputs/baseline_metric.json`
-- `outputs/primary_metric.json`
-- `outputs/milestone_manifest.json`
-- `artifacts/model_report.csv`
-- `artifacts/metadata.json`
-
-The milestone runner should be executable from the repository root using:
-
-```bash
-uv run main.py
+df = kagglehub.load_dataset(
+    KaggleDatasetAdapter.PANDAS,
+    "chaitu20/ipl-dataset2008-2025",
+    "",
+)
+print(f"Rows: {len(df)}")
+print(f"Columns: {list(df.columns)}")
+print(df.head(3))
 ```
 
-The Streamlit app remains separately executable using:
+Run with: `pip install kagglehub[pandas-datasets] && python Data/data_probe.py`
 
-```bash
-streamlit run app.py
-```
+The deployed Streamlit app and `uv run main.py` do **not** require the raw CSV at runtime — they load saved artifacts from `artifacts/`. The probe above exists purely to demonstrate reproducible data access for grading purposes.
 
-## Current implementation status
+---
 
-Implemented:
-- Streamlit app interface
-- custom team names
-- playing XI selection
-- venue, pitch, weather, toss and model controls
-- two-innings simulation
-- target chase logic
-- batting scorecards
-- bowling scorecards
-- fall of wickets
-- ball-by-ball verification table
-- optional commentary-style output
-- score progression graph
-- simulation distribution output
-- saved model artefact loading
+## 7. Scope Limits
 
-Partially implemented:
-- empirical calibration/blending
-- extra outcome handling
-- no-ball and free-hit logic
-- model diagnostics
-- rule checking
+- We are **not** estimating a causal effect of any player, policy, or intervention. This is a predictive project.
+- We are **not** predicting match winners directly. The output is a probability distribution over ball outcomes, from which match scores are simulated.
+- We are **not** harmonising venue names across all historical seasons; known venue name variants are mapped but residual mismatches may exist.
+- We are **not** building player injury or availability forecasting.
+- We are **not** shipping a production-grade mobile application.
+- Secondary metrics (accuracy, balanced accuracy, macro-F1) may be reported but are **not** the graded success criterion.
+- Weather and pitch inputs are user-specified scenario assumptions, not data-trained variables.
 
-Still under improvement:
-- stronger player-level feature engineering,
-- venue name standardisation,
-- richer use of matchup history,
-- improved probability calibration,
-- more rigorous season-wise validation,
-- better use of the full dataset richness,
-- and more stable ML performance relative to the empirical baseline.
+---
 
-## Known limitations
+## 8. Risks and Fallback
 
-The current V3 version is a working prototype, but the modelling layer is not yet the final intended version.
+**Risk:** The Kaggle dataset API changes structure or requires authentication that is unavailable in the grading environment.
 
-Known limitations:
-- venue names are not yet fully standardised,
-- weather and pitch are mostly scenario assumptions rather than deeply data-trained variables,
-- player strength is not yet captured as strongly as desired,
-- matchup-specific features are limited,
-- some ML models may be weaker than the empirical baseline,
-- probability calibration needs further work,
-- and the raw dataset is not used at runtime because the app relies on saved artefacts.
+**Fallback:** The repo includes `artifacts/` with all pre-trained model files and metadata. `uv run main.py` runs end-to-end using these saved artifacts and does not require a live Kaggle download. The grader can verify data access separately by running `Data/data_probe.py` in any environment with a Kaggle account. If the probe also fails, the `artifacts/metadata.json` file documents the training data shape (row count, column names, season range) as a static record of what was used.
 
-These limitations are explicitly part of the next development stage.
+---
 
-## Planned improvements
+## 9. Reproducibility Checklist
 
-The next modelling-first version will focus on:
+- [x] `uv run main.py` runs end-to-end with no manual intervention and completes in under 10 minutes
+- [x] It writes `outputs/primary_metric.json` with shape `{"metric_name": "log_loss", "value": <number>, "threshold": <baseline_value>, "passed": true}`
+- [x] It writes `outputs/baseline_metric.json` with shape `{"metric_name": "log_loss_baseline", "value": <number>}`
+- [x] It writes `outputs/milestone_manifest.json` documenting run status
+- [x] `README.md` documents the run command and expected outputs in under 20 lines
+- [x] All data sources are either fetched in-script or accessible via the documented Kaggle probe
+- [x] Saved model artifacts in `artifacts/` allow the app and main.py to run without the raw CSV
 
-1. Cleaning and standardising stadium names.
-2. Standardising player names.
-3. Creating stronger batter features such as strike rate, boundary rate, dismissal rate and phase-wise scoring.
-4. Creating stronger bowler features such as economy, wicket rate, dot-ball rate, phase-wise performance and death-over skill.
-5. Adding matchup-level features where sample size permits.
-6. Training Random Forest and XGBoost models more rigorously.
-7. Calibrating predicted probabilities using proper calibration methods.
-8. Validating model performance through time-based or season-based splits.
-9. Comparing simulated score distributions against actual IPL score distributions.
-10. Reducing reliance on empirical baseline blending as model quality improves.
+---
 
-## Expected final deliverable
+## Sign-off
 
-The final deliverable will be an interactive probabilistic cricket simulator that can:
+By submitting this charter, the team agrees that this is the plan the project will be graded against.
 
-- simulate IPL-style T20 matches ball by ball,
-- allow user-defined team and player selection,
-- generate realistic scorecards and match paths,
-- show uncertainty through repeated simulations,
-- explain model and simulation outputs,
-- and support tactical cricket decision analysis.
-
-The intended final positioning is not merely a cricket score predictor, but a calibrated cricket decision-support simulator for analysing how team composition, batting order, bowling choices and match conditions affect expected match outcomes.
+*Signed: Annay De, Tanmay Singh, Siddhant Mukherjee*
