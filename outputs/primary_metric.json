@@ -1,0 +1,10 @@
+{
+  "metric_name": "best_available_model_log_loss",
+  "value": 1.7136482289192403,
+  "threshold": 1.866995762830869,
+  "passed": true,
+  "unit": "multiclass log loss; lower is better",
+  "model": "xgboost",
+  "notes": "Preliminary primary metric from current V3 trained artefacts. Final version will replace this after stronger feature engineering and calibration.",
+  "is_template": false
+}
