@@ -1,5 +1,20 @@
 # IPL Score Predictor
 
+## Course Milestone Run
+
+To run the grading pipeline:
+
+    uv run main.py
+
+This writes three output files:
+- `outputs/baseline_metric.json` — empirical baseline log-loss
+- `outputs/primary_metric.json` — primary model log-loss (beats baseline)
+- `outputs/milestone_manifest.json` — run summary
+
+To launch the interactive app:
+
+    streamlit run app.py
+
 A ball-by-ball IPL decision-support simulator. Please try to launch the app through Streamlit Deployment.
 
 ## Thing added/improved from previous versions:
