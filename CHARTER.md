@@ -118,9 +118,4 @@ The deployed Streamlit app and `uv run main.py` do **not** require the raw CSV a
 - [x] Saved model artifacts in `artifacts/` allow the app and main.py to run without the raw CSV
 
 ---
-
-## Sign-off
-
-By submitting this charter, the team agrees that this is the plan the project will be graded against.
-
-*Signed: Annay De, Tanmay Singh, Siddhant Mukherjee*
+*Submitted by: Annay De, Tanmay Singh, Siddhant Mukherjee*
