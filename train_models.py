@@ -1,7 +1,7 @@
 """
 CricPredAI V3.0 training pipeline.
-Run locally with IPL.csv present only when you want to retrain artefacts.
-The deployed Streamlit app loads artefacts from artifacts/ and does not need IPL.csv.
+Run locally with IPL.csv present only when you want to retrain artefacts
+The deployed Streamlit app loads artefacts from artifacts/ and does not need IPL.csv
 """
 from __future__ import annotations
 import json
