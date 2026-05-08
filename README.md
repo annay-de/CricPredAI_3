@@ -1,49 +1,70 @@
-# IPL Score Predictor
+**ECO 6810 Final Project — Annay De, Tanmay Singh, Siddhant Mukherjee**
+
+This project builds a probabilistic decision-support tool for resource allocation under uncertainty. The stakeholder is an IPL franchise strategy unit facing a constrained optimisation problem: which 11 players (from a fixed squad) maximise expected match performance given opponent, venue, pitch, and weather conditions? The tool simulates ball-by-ball match outcomes under different XI configurations, replacing analyst intuition with a calibrated ML model.
+
+---
 
 ## Course Milestone Run
 
 To run the grading pipeline:
+uv run main.py
 
-    uv run main.py
 
 This writes three output files:
-- `outputs/baseline_metric.json` — empirical baseline log-loss
-- `outputs/primary_metric.json` — primary model log-loss (beats baseline)
+- `outputs/baseline_metric.json` — empirical baseline log-loss (historical average prior)
+- `outputs/primary_metric.json` — primary model log-loss (XGBoost, beats baseline)
 - `outputs/milestone_manifest.json` — run summary
 
-To launch the interactive app:
+Current result: XGBoost log-loss `1.7136` < baseline `1.8670` → `passed: true`
 
-    streamlit run app.py
+To launch the interactive decision-support app:
+streamlit run app.py
 
-A ball-by-ball IPL decision-support simulator. Please try to launch the app through Streamlit Deployment.
 
-## Thing added/improved from previous versions:
+Live deployment: https://cricpredai3.streamlit.app/
 
-- Removed the unreliable preset team-pool dependency from the main workflow.
-- User types team names manually.
-- Player selection uses autocomplete-style Streamlit multiselects based on dataset-derived player names.
-- Adds venue, pitch, weather, toss winner and toss decision.
-- Adds Random Forest and XGBoost training support, alongside logistic, Extra Trees, HistGradientBoosting and baseline prior.
-- Uses empirical calibration/blending in simulation so ML probabilities do not create absurd collapses.
-- Correctly handles wides/no-balls at the start of an over: bowler is locked until six legal balls are bowled.
-- Adds no-balls, free-hit logic, wides, byes and leg-byes using dataset-derived extra distributions.
-- Removes broken benchmark simulation mode.
-- Combines both innings scorecards on one page.
-- Superimposes score progression curves for both innings and marks wickets.
-- Adds ball-by-ball verification table and optional commentary.
+---
+
+## What this tool does
+
+The simulator takes a user-specified XI, venue, pitch type, weather, toss outcome, and opponent XI — then runs a ball-by-ball probabilistic simulation of both innings using a trained XGBoost model. The output is a projected scorecard and score progression curve, allowing the analyst to compare expected outcomes across different squad configurations before committing to a selection.
+
+This is a decision analytics tool, not a score prediction app. The value is in comparing scenarios, not in producing a single point forecast.
+
+---
+
+## Project framing
+
+The resource-allocation problem: a franchise has a squad of ~20 players and must select 11. Each slot has an opportunity cost. The decision is made under uncertainty about pitch conditions, opponent strategy, and individual player form. This project builds the simulation layer that lets an analyst quantify that uncertainty and stress-test selection choices before the decision moment (24 hours before match).
+
+---
+
+## Improvements in this version
+
+- Removed unreliable preset team-pool dependency from main workflow
+- User types team names manually; player selection uses dataset-derived autocomplete
+- Adds venue, pitch, weather, toss winner and toss decision as simulation inputs
+- Adds XGBoost alongside Random Forest, Logistic, Extra Trees, HistGradientBoosting, and baseline prior
+- Empirical calibration/blending prevents ML probability collapse in simulation
+- Correct wide/no-ball handling: bowler locked until six legal balls bowled
+- No-ball, free-hit, wide, bye and leg-bye logic using dataset-derived extra distributions
+- Combined both innings scorecards on one page
+- Superimposed score progression curves for both innings with wicket markers
+- Ball-by-ball verification table and optional commentary
+
+---
 
 ## Deploying
 
-Upload the extracted folder to GitHub and deploy `app.py` on Streamlit Cloud.
-
-The deployed app does not need `IPL.csv` because it loads saved artefacts from `artifacts/`.
+Deploy `app.py` on Streamlit Cloud. The app loads saved artefacts from `artifacts/` and does not require `IPL.csv` at runtime.
 
 ## Retraining
 
-To retrain, place `IPL.csv` in this folder and run:
-
-```bash
+To retrain models from scratch, place `IPL.csv` in the root folder and run:
 python train_models.py
-```
 
-This will regenerate the files under `artifacts/`.
+This regenerates all files under `artifacts/`.
+
+## Data
+
+See `Data/README.md` for the full data source, Kaggle download path, and snapshot details.
