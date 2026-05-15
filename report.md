@@ -110,7 +110,19 @@ Rashid Khan
 
 These are some outputs from the simulation
 ![Interactive Score Progression Graph that is displayed after simulations](outputs/Example_simulation_score_progress.png)
-![Distribution of 20 simulations run](outputs/example_simulation_distribution.csv)
+### Simulation Distribution Summary (20 simulations)
+
+| Statistic | First Innings Runs | Second Innings Runs | First Innings Wickets | Second Innings Wickets |
+|---|---|---|---|---|
+| Mean | 173.25 | 161.95 | 7.35 | 7.05 |
+| Std Dev | 36.20 | 31.99 | 1.81 | 2.65 |
+| Min | 75 | 78 | 5 | 2 |
+| 25th Percentile | 167.75 | 142.25 | 6 | 5 |
+| Median | 181.50 | 169.50 | 7 | 7 |
+| 75th Percentile | 194.75 | 184.50 | 9 | 10 |
+| Max | 223 | 201 | 10 | 10 |
+
+*Based on 20 simulated matches under identical input conditions. First innings team won 10/20 simulations.*
 
 *Run `streamlit run app.py` to view interactive score progression curves comparing two XI configurations under the same match conditions.*
 
