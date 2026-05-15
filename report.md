@@ -74,8 +74,7 @@ The improvement over baseline is modest but genuine and consistent across the he
 | Model | Log-Loss | Beats Baseline |
 |---|---|---|
 | Baseline (empirical prior) | 1.8670 | — |
-| Logistic Regression | ~1.82 | Yes |
-| Random Forest | ~1.75 | Yes |
+| Random Forest | 2.2343 | No ❌ |
 | XGBoost (primary) | 1.7136 | Yes ✅ |
 
 ![Model Comparison](outputs/model_comparison.png)
