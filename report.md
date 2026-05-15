@@ -80,7 +80,38 @@ The improvement over baseline is modest but genuine and consistent across the he
 
 ![Model Comparison](outputs/model_comparison.png)
 
-### Figure 1: Score Progression (example simulation)
+### Example Simulation Results from Website
+I ran 20 simulations between two example teams;
+**Team Inferno XI**
+Rohit Sharma
+Travis Head
+Virat Kohli
+Suryakumar Yadav
+Heinrich Klaasen
+Hardik Pandya
+Andre Russell
+Ravindra Jadeja
+Jasprit Bumrah
+Kuldeep Yadav
+Matheesha Pathirana
+
+**Team Tempest XI**
+Abhishek Sharma
+Jos Buttler
+Shubman Gill
+Nicholas Pooran
+Rishabh Pant
+Glenn Maxwell
+Sunil Narine
+Axar Patel
+Mitchell Starc
+Mohammed Shami
+Rashid Khan
+
+These are some outputs from the simulation
+![Interactive Score Progression Graph that is displayed after simulations](outputs/Example_simulation_score_progress.png)
+![Distribution of 20 simulations run](outputs/example_simulation_distribution.csv)
+
 *Run `streamlit run app.py` to view interactive score progression curves comparing two XI configurations under the same match conditions.*
 
 ---
