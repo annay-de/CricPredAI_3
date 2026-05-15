@@ -7,7 +7,7 @@ This project builds a probabilistic decision-support tool for resource allocatio
 ## Course Milestone Run
 
 To run the grading pipeline:
-uv run main.py
+uv run --with-requirements requirements.txt main.py
 
 
 This writes three output files:
