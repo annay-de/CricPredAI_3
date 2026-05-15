@@ -78,6 +78,8 @@ The improvement over baseline is modest but genuine and consistent across the he
 | Random Forest | ~1.75 | Yes |
 | XGBoost (primary) | 1.7136 | Yes ✅ |
 
+![Model Comparison](outputs/model_comparison.png)
+
 ### Figure 1: Score Progression (example simulation)
 *Run `streamlit run app.py` to view interactive score progression curves comparing two XI configurations under the same match conditions.*
 
