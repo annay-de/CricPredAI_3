@@ -5,6 +5,6 @@
   "passed": true,
   "unit": "multiclass log loss; lower is better",
   "model": "xgboost",
-  "notes": "Preliminary primary metric from current V3 trained artefacts. Final version will replace this after stronger feature engineering and calibration.",
+  "notes": "Final primary metric. XGBoost trained on IPL ball-by-ball data, 2008-2025.",
   "is_template": false
 }
