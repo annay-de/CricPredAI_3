@@ -16,7 +16,7 @@
     "outputs/primary_metric.json",
     "outputs/milestone_manifest.json"
   ],
-  "current_status": "Milestone-ready: source probe, baseline metric, preliminary primary metric, and manifest are produced by main.py.",
+  "current_status": "Final submission: source probe, baseline metric, primary metric, and manifest produced by uv run --with-requirements requirements.txt main.py",
   "generated_at_utc": "2026-05-07T12:20:01.627625+00:00",
   "is_template": false
 }
